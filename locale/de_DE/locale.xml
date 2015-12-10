@@ -14,4 +14,5 @@
 <locale name="de_DE" full_name="Deutsch (Deutschland)">
 	<message key="plugins.generic.vgWort.displayName">VG-Wort-Plugin</message>
 	<message key="plugins.generic.vgWort.description">VGWORT-Zählmarken an Dateien anhängen.</message>
+	<message key="plugins.generic.vgWort.vgWort">VG Wort</message>
 </locale>
