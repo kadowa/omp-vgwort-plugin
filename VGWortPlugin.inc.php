@@ -26,17 +26,19 @@ class VGWortPlugin extends GenericPlugin {
 	function register($category, $path) {
 		$success = parent::register($category, $path);
 		if ($success && $this->getEnabled()) {
-			//HookRegistry::call('SubmissionHandler::saveSubmit', array($step, &$submission, &$submitForm))
 			HookRegistry::register('Templates::Management::Settings::website', array($this, 'callbackShowWebsiteSettingsTabs'));
 			// Register the components this plugin implements to
 			// permit administration of static pages.
 			HookRegistry::register('LoadComponentHandler', array($this, 'setupGridHandler'));
+			// register addition of VG Wort pixels to submission file settings table
+			HookRegistry::register('submissionfiledao::getAdditionalFieldNames', array($this, 'addVGWortPixelField'));
 		}
 		return $success;
 	}
 	
 	/**
-	 * Extend the website settings tabs to include static pages
+	 * Extend the website settings tabs to include VG Wort
+	 * TODO Move to tools instead
 	 * @param $hookName string The name of the invoked hook
 	 * @param $args array Hook parameters
 	 * @return boolean Hook handling status
@@ -48,13 +50,15 @@ class VGWortPlugin extends GenericPlugin {
 	
 		// Add a new tab for static pages
 		$output .= '<li><a name="vgWort" href="' . $dispatcher->url($request, ROUTE_COMPONENT, null, 'plugins.generic.vgWort.controllers.grid.VGWortGridHandler', 'index') . '">' . __('plugins.generic.vgWort.vgWort') . '</a></li>';
-	
+
+		$press = $request->getPress();
+		
 		// Permit other plugins to continue interacting with this hook
 		return false;
 	}
 	
 	/**
-	 * Permit requests to the static pages grid handler
+	 * Permit requests to the VG Wort grid handler
 	 * @param $hookName string The name of the hook being invoked
 	 * @param $args array The parameters to the invoked hook
 	 */
@@ -69,8 +73,28 @@ class VGWortPlugin extends GenericPlugin {
 		return false;
 	}
 	
-	function addVGWCounter($submissionFile, $pixel) {
-		$submissionFile->setData('vgwortpixel', $pixel);
+	/*
+	 * Add field for VG Wort pixels in the submission_file_settings table
+	 */
+	function addVGWortPixelField($hookName, $params) {
+		$returner =& $params[1];
+		$returner[] = "vgWortPixel";
+
+		return false;
+	}
+	
+	/*
+	 * Insert VG Wort Pixel into the submission_file_settings table
+	 */
+	function addVGWortPixel($submissionFile, $pixel) {
+		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+		
+		$submissionFile->setData('vgWortPixel', $pixel);
+		$submissionFileDao->updateDataObjectSettings(
+			'submission_file_settings',
+			$submissionFile,
+			array('file_id' => $file->getFileId())
+		);
 	}
 
 	function getDisplayName() {
