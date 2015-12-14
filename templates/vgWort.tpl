@@ -6,5 +6,8 @@
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
  * VG Wort plugin -- displays the VGWortGrid.
+ * {url|assign:vgWortGridUrl router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.vgWort.controllers.VGWortGridHandler" op="fetchGrid" escape=false}
+ * {load_url_in_div id="vgWortGridContainer" url=$vgWortGridUrl}
  *}
-This is vgWort.tpl.
+
+ <b>vgWort template</b>
