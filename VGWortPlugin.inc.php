@@ -17,6 +17,14 @@ import('lib.pkp.classes.plugins.GenericPlugin');
 
 class VGWortPlugin extends GenericPlugin {
 
+	function getDisplayName() {
+		return __('plugins.generic.vgWort.displayName');
+	}
+	
+	function getDescription() {
+		return __('plugins.generic.vgWort.description');
+	}
+
 	/**
 	 * Called as a plugin is registered to the registry
 	 * @param $category String Name of category plugin was registered to
@@ -30,10 +38,53 @@ class VGWortPlugin extends GenericPlugin {
 			// Register the components this plugin implements to
 			// permit administration of static pages.
 			HookRegistry::register('LoadComponentHandler', array($this, 'setupGridHandler'));
+			
 			// register addition of VG Wort pixels to submission file settings table
 			HookRegistry::register('submissionfiledao::getAdditionalFieldNames', array($this, 'addVGWortPixelField'));
+			
+			// add VG Wort pixel metadata to submission file metadata form
+			HookRegistry::register('submissionfilesmetadataform' . '::Constructor', array($this, 'metadataForm'));
+			HookRegistry::register('submissionfilesmetadataform' . '::execute', array($this, 'metadataFormExecute'));
+			HookRegistry::register('submissionfilesmetadataform' . '::display', array($this, 'metadataFormDisplay'));
+			HookRegistry::register('Templates::Controllers::Wizard::FileUpload::submissionFileMetadataForm::AdditionalMetadata', array($this, 'metadataFieldEdit'));
 		}
 		return $success;
+	}
+	
+	function metadataForm($hookName, $params) {
+		$form =& $params[0];
+	}
+	
+
+	function metadataFormExecute($hookName, $params) {
+		$form =& $params[0];
+		
+		//TODO: get pixel from form
+		$pixel = "test";
+		
+		$submissionFile = $form->getSubmissionFile();
+		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+		$submissionFile->setData('vgWortPixel', $pixel);
+		$submissionFileDao->updateDataObjectSettings(
+				'submission_file_settings',
+				$submissionFile,
+				array('file_id' => $submissionFile->getFileId())
+		);
+		
+	}
+	
+	function metadataFormDisplay($hookName, $params) {
+		$form =& $params[0];
+	}
+	
+	/**
+	 * Insert VG Wort field into metadata edit form
+	 */
+	function metadataFieldEdit($hookName, $params) {
+		$smarty =& $params[1];
+		$output =& $params[2];
+		$output .= $smarty->fetch($this->getTemplatePath() . 'vgWort.tpl');
+		return false;
 	}
 	
 	/**
@@ -50,8 +101,6 @@ class VGWortPlugin extends GenericPlugin {
 	
 		// Add a new tab for static pages
 		$output .= '<li><a name="vgWort" href="' . $dispatcher->url($request, ROUTE_COMPONENT, null, 'plugins.generic.vgWort.controllers.grid.VGWortGridHandler', 'index') . '">' . __('plugins.generic.vgWort.vgWort') . '</a></li>';
-
-		$press = $request->getPress();
 		
 		// Permit other plugins to continue interacting with this hook
 		return false;
@@ -95,14 +144,6 @@ class VGWortPlugin extends GenericPlugin {
 			$submissionFile,
 			array('file_id' => $file->getFileId())
 		);
-	}
-
-	function getDisplayName() {
-		return __('plugins.generic.vgWort.displayName');
-	}
-
-	function getDescription() {
-		return __('plugins.generic.vgWort.description');
 	}
 	
 	/**
