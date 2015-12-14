@@ -52,6 +52,27 @@ class VGWortGridHandler extends GridHandler {
 		// Set the grid details.
 		$this->setTitle('plugins.generic.vgWort.vgWort');
 		$this->setInstructions('plugins.generic.vgWort.description');
+		
+		$publishedMonographDao = DAORegistry::getDAO('PublishedMonographDAO');
+		$monographDao = DAORegistry::getDAO('MonographDAO');
+		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+		$publishedMonographFactory = $publishedMonographDao->getByPressId($context->getId());
+		$monographFactory = $monographDao->getByPressId($context->getId());
+		
+		while ($monograph = $monographFactory->next()) {
+			$submissionId = $monograph->getId();
+			$files = $submissionFileDao->getBySubmissionId($submissionId);
+			$this->setGridDataElements($files);
+ 			foreach ($files as $file) {
+				$file->setData('vgWortPixel', "test123");
+				$submissionFileDao->updateDataObjectSettings(
+						'submission_file_settings',
+						$file,
+						array('file_id' => $file->getFileId())
+				);
+		
+			}
+		}
 	}
 
 
