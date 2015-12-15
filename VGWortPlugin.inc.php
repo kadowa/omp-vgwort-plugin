@@ -40,7 +40,10 @@ class VGWortPlugin extends GenericPlugin {
 			HookRegistry::register('LoadComponentHandler', array($this, 'setupGridHandler'));
 			
 			// register addition of VG Wort pixels to submission file settings table
-			HookRegistry::register('submissionfiledao::getAdditionalFieldNames', array($this, 'addVGWortPixelField'));
+			HookRegistry::register('submissionfiledao::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
+			HookRegistry::register('monographfiledao::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
+			HookRegistry::register('submissionfiledaodelegate::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
+			HookRegistry::register('monographfiledaodelegate::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
 			
 			// add VG Wort pixel metadata to submission file metadata form
 			HookRegistry::register('submissionfilesmetadataform' . '::Constructor', array($this, 'metadataForm'));
@@ -70,7 +73,6 @@ class VGWortPlugin extends GenericPlugin {
 				$submissionFile,
 				array('file_id' => $submissionFile->getFileId())
 		);
-		
 	}
 	
 	function metadataFormDisplay($hookName, $params) {
@@ -125,7 +127,7 @@ class VGWortPlugin extends GenericPlugin {
 	/*
 	 * Add field for VG Wort pixels in the submission_file_settings table
 	 */
-	function addVGWortPixelField($hookName, $params) {
+	function addVGWortPixelMetadataField($hookName, $params) {
 		$returner =& $params[1];
 		$returner[] = "vgWortPixel";
 
