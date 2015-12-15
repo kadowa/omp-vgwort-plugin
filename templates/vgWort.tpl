@@ -10,4 +10,8 @@
  * {load_url_in_div id="vgWortGridContainer" url=$vgWortGridUrl}
  *}
 
- <b>vgWort template</b>
+{fbvFormArea id="additionalMetaData"}
+	{fbvFormSection title="plugins.generic.vgWort.submissionMetadataForm" required=false}
+		{fbvElement type="text" id="vgwort" value=$submissionFile->getData('vgWortPixel', '') multilingual=false maxlength="255"}
+	{/fbvFormSection}
+{/fbvFormArea}
