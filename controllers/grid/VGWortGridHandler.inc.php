@@ -14,6 +14,8 @@
  */
 
 import('lib.pkp.classes.controllers.grid.GridHandler');
+import('plugins.generic.vgWort.controllers.grid.VGWortGridRow');
+import('plugins.generic.vgWort.controllers.grid.VGWortGridCellProvider');
 
 class VGWortGridHandler extends GridHandler {
 	/** @var StaticPagesPlugin The static pages plugin */
@@ -52,6 +54,7 @@ class VGWortGridHandler extends GridHandler {
 		// Set the grid details.
 		$this->setTitle('plugins.generic.vgWort.vgWort');
 		$this->setInstructions('plugins.generic.vgWort.description');
+		$this->setEmptyRowText('plugins.generic.staticPages.noneCreated');
 		
 		$publishedMonographDao = DAORegistry::getDAO('PublishedMonographDAO');
 		$monographDao = DAORegistry::getDAO('MonographDAO');
@@ -62,17 +65,54 @@ class VGWortGridHandler extends GridHandler {
 		while ($monograph = $monographFactory->next()) {
 			$submissionId = $monograph->getId();
 			$files = $submissionFileDao->getBySubmissionId($submissionId);
-			$this->setGridDataElements($files);
- 			foreach ($files as $file) {
-				$file->setData('vgWortPixel', "test123");
-				$submissionFileDao->updateDataObjectSettings(
-						'submission_file_settings',
-						$file,
-						array('file_id' => $file->getFileId())
-				);
-		
-			}
+			//$this->setGridDataElements($files);
+ 			//foreach ($files as $file) {
+				//$file->setData('vgWortPixel', "test123");
+				//$submissionFileDao->updateDataObjectSettings(
+				//		'submission_file_settings',
+				//		$file,
+				//		array('file_id' => $file->getFileId())
+				//);
+			//}
+			break;
 		}
+
+		$this->setGridDataElements($monographFactory);
+		// Add grid-level actions
+		$router = $request->getRouter();
+		import('lib.pkp.classes.linkAction.request.AjaxModal');
+		$this->addAction(
+				new LinkAction(
+						'addStaticPage',
+						new AjaxModal(
+								$router->url($request, null, null, 'addStaticPage'),
+								__('plugins.generic.staticPages.addStaticPage'),
+								'modal_add_item'
+						),
+						__('plugins.generic.staticPages.addStaticPage'),
+						'add_item'
+				)
+		);
+		
+		// Columns
+		$cellProvider = new VGWortGridCellProvider();
+		$this->addColumn(new GridColumn(
+				'title',
+				'plugins.generic.vgWort.pageTitle',
+				null,
+				'controllers/grid/gridCell.tpl', // Default null not supported in OMP 1.1
+				$cellProvider
+		));
+	}
+	
+	//
+	// Overridden methods from GridHandler
+	//
+	/**
+	* @copydoc Gridhandler::getRowInstance()
+	*/
+	function getRowInstance() {
+		return new VGWortGridRow();
 	}
 
 
@@ -85,9 +125,10 @@ class VGWortGridHandler extends GridHandler {
 	 * @param $request PKPRequest
 	 */
 	function index($args, $request) {
+		error_log("Hi there!");
 		$context = $request->getContext();
 		import('lib.pkp.classes.form.Form');
-		$form = new Form(self::$plugin->getTemplatePath() . 'vgWort.tpl');
+		$form = new Form(self::$plugin->getTemplatePath() . 'vgWortMetadata.tpl');
 		$json = new JSONMessage(true, $form->fetch($request));
 		return $json->getString();
 	}

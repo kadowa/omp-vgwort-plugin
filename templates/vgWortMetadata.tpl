@@ -39,5 +39,9 @@
 		{/fbvFormSection}
 	{/fbvFormArea}
 
+	
+	{url|assign:representationsGridUrl router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.vgWort.controllers.grid.VGWortGridHandler" op="fetchGrid" escape=false}
+	{load_url_in_div id="formatsGridContainer"|uniqid url=$representationsGridUrl}
+
 	{fbvFormButtons id="vgwortMetadataFormSubmit" submitText="common.save"}
 </form>
