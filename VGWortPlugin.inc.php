@@ -34,9 +34,9 @@ class VGWortPlugin extends GenericPlugin {
 	function register($category, $path) {
 		$success = parent::register($category, $path);
 		if ($success && $this->getEnabled()) {
+			// Register VG Wort tab in catalog
 			HookRegistry::register('Templates::Controllers::Modals::SubmissionMetadata::CatalogEntryTabs::Tabs', array($this, 'showVGWortTab'));
-			// Register the components this plugin implements to
-			// permit administration of static pages.
+			// Register the components this plugin implements.
 			HookRegistry::register('LoadComponentHandler', array($this, 'setupGridHandler'));
 			
 			// register addition of VG Wort pixels to submission file settings table
@@ -44,51 +44,11 @@ class VGWortPlugin extends GenericPlugin {
 			HookRegistry::register('monographfiledao::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
 			HookRegistry::register('submissionfiledaodelegate::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
 			HookRegistry::register('monographfiledaodelegate::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
-			
-			// add VG Wort pixel metadata to submission file metadata form
-			HookRegistry::register('submissionfilesmetadataform' . '::Constructor', array($this, 'metadataForm'));
-			HookRegistry::register('submissionfilesmetadataform' . '::execute', array($this, 'metadataFormExecute'));
-			HookRegistry::register('submissionfilesmetadataform' . '::display', array($this, 'metadataFormDisplay'));
-			HookRegistry::register('Templates::Controllers::Wizard::FileUpload::submissionFileMetadataForm::AdditionalMetadata', array($this, 'metadataFieldEdit'));
 		}
 		return $success;
 	}
 	
-	function metadataForm($hookName, $params) {
-		$form =& $params[0];
-	}
-	
 
-	function metadataFormExecute($hookName, $params) {
-		$form =& $params[0];
-		
-		$public = $form->getData('vgWortPublic');
-
-		$submissionFile = $form->getSubmissionFile();
-		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-		
-		$submissionFile->setData('vgWortPublic', $public);
-		$submissionFileDao->updateDataObjectSettings(
-				'submission_file_settings',
-				$submissionFile,
-				array('file_id' => $submissionFile->getFileId())
-		);
-	}
-	
-	function metadataFormDisplay($hookName, $params) {
-		$form =& $params[0];
-	}
-	
-	/**
-	 * Insert VG Wort field into metadata edit form
-	 */
-	function metadataFieldEdit($hookName, $params) {
-		$smarty =& $params[1];
-		$output =& $params[2];
-		$output .= $smarty->fetch($this->getTemplatePath() . 'vgWort.tpl');
-		return false;
-	}
-	
 	/**
 	 * Extend the website settings tabs to include VG Wort
 	 * @param $hookName string The name of the invoked hook
@@ -96,14 +56,60 @@ class VGWortPlugin extends GenericPlugin {
 	 * @return boolean Hook handling status
 	 */
 	function showVGWortTab($hookName, $args) {
+		$smarty =& $args[1];
 		$output =& $args[2];
 		$request =& Registry::get('request');
 		$dispatcher = $request->getDispatcher();
-	
+
+		$submissionId = $smarty->get_template_vars('submissionId');
+		$stageId = $smarty->get_template_vars('stageId');
+		$counter = $smarty->get_template_vars('counter');
+
 		// Add a new catalog entry tab
-		//$output .= '<li><a name="vgWort" href="' . $dispatcher->url($request, ROUTE_COMPONENT, null, 'plugins.generic.vgWort.controllers.grid.VGWortGridHandler', 'index') . '">' . __('plugins.generic.vgWort.vgWort') . '</a></li>';
-		$output .= '<li><a name="vgWort" href='  . $dispatcher->url($request, ROUTE_COMPONENT, null, "plugins.generic.vgWort.controllers.modal.VGWortCatalogEntryTabHandler", 'index', null, array("submissionId" => "18", "stageId" => "5")) . '>' . __('plugins.generic.vgWort.vgWort') . '</a></li>';
+		$output .= '<li><a name="vgWort" href='
+			. $dispatcher->url($request, ROUTE_COMPONENT, null,
+					"plugins.generic.vgWort.controllers.modal.VGWortCatalogEntryTabHandler",
+					'vgWortMetadata', null,
+					array('stageId' => $stageId, 'submissionId' => $submissionId, 'tabPos' => $counter, 'tab' => 'vgwort'))
+			. '>' . __('plugins.generic.vgWort.vgWort') . '</a></li>';
+
+		// It's not nice to touch this, but I don't see any other option
+		$smarty->_tpl_vars['counter'] = $counter+1;
 	}
+	
+	/*
+	 * Add field for VG Wort pixels in the submission_file_settings table
+	 */
+	function addVGWortPixelMetadataField($hookName, $params) {
+		$returner =& $params[1];
+		$returner[] = "vgWortPublic";
+		$returner[] = "vgWortPrivate";
+
+		return false;
+	}
+	
+	/*
+	 * Insert VG Wort Pixel into the submission_file_settings table
+	 */
+	function addVGWortPixel($submissionFile, $public) {
+		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+		
+		$submissionFile->setData('vgWortPublic', $public);
+		$submissionFileDao->updateDataObjectSettings(
+			'submission_file_settings',
+			$submissionFile,
+			array('file_id' => $submissionFile->getFileId())
+		);
+	}
+	
+	/**
+	 * @copydoc PKPPlugin::getTemplatePath
+	 */
+	function getTemplatePath() {
+		return parent::getTemplatePath() . 'templates/';
+	}
+	
+	// Not in use
 	
 	/**
 	 * Permit requests to the VG Wort grid handler
@@ -125,40 +131,5 @@ class VGWortPlugin extends GenericPlugin {
 		}
 		return false;
 	}
-	
-	/*
-	 * Add field for VG Wort pixels in the submission_file_settings table
-	 */
-	function addVGWortPixelMetadataField($hookName, $params) {
-		$returner =& $params[1];
-		$returner[] = "vgWortPublic";
-		$returner[] = "vgWortPrivate";
-
-		return false;
-	}
-	
-	/*
-	 * Insert VG Wort Pixel into the submission_file_settings table
-	 */
-	function addVGWortPixel($submissionFile, $public, $private) {
-		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-		
-		$submissionFile->setData('vgWortPublic', $public);
-		$submissionFile->setData('vgWortPrivate', $private);
-		$submissionFileDao->updateDataObjectSettings(
-			'submission_file_settings',
-			$submissionFile,
-			array('file_id' => $submissionFile->getFileId())
-		);
-	}
-	
-	/**
-	 * @copydoc PKPPlugin::getTemplatePath
-	 */
-	function getTemplatePath() {
-		return parent::getTemplatePath() . 'templates/';
-	}
-	
-	
 }
 ?>

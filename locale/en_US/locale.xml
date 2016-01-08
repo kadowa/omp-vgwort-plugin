@@ -15,7 +15,9 @@
 	<message key="plugins.generic.vgWort.displayName">VG Wort Plugin</message>
 	<message key="plugins.generic.vgWort.description">Enables adding VGWORT counters to submission files.</message>
 	<message key="plugins.generic.vgWort.vgWort">VG Wort</message>
-	
+
 	<message key="plugins.generic.vgWort.submissionMetadataFormPublic">Public identifier</message>
 	<message key="plugins.generic.vgWort.submissionMetadataFormPrivate">Private identifier</message>
+
+	<message key="plugins.generic.vgWort.notification.savedForm">VG Wort pixels saved.</message>
 </locale>

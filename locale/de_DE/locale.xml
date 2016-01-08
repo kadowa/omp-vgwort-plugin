@@ -15,7 +15,9 @@
 	<message key="plugins.generic.vgWort.displayName">VG-Wort-Plugin</message>
 	<message key="plugins.generic.vgWort.description">VGWORT-Zählmarken an Dateien anhängen.</message>
 	<message key="plugins.generic.vgWort.vgWort">VG Wort</message>
-	
+
 	<message key="plugins.generic.vgWort.submissionMetadataFormPublic">Öffentlicher Identifizierungscode</message>
 	<message key="plugins.generic.vgWort.submissionMetadataFormPrivate">Privater Identifizierungscode</message>
+
+	<message key="plugins.generic.vgWort.notification.savedForm">VG-Wort-Zählmarken gespeichert.</message>
 </locale>

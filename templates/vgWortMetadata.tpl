@@ -7,14 +7,37 @@
  *
  * VG Wort plugin -- displays the VGWort pixel form fields.
  *}
+ 
+<script type="text/javascript">
+	$(function() {ldelim}
+		// Attach the form handler.
+		$('#vgWortMetadataForm').pkpHandler(
+			'$.pkp.controllers.catalog.form.CatalogMetadataFormHandler',
+			{ldelim}
+				trackFormChanges: true,
+				$uploader: $('#plupload_catalogMetadata'),
+				uploaderOptions: {ldelim}
+					uploadUrl: {url|json_encode router=$smarty.const.ROUTE_COMPONENT component="tab.catalogEntry.CatalogEntryTabHandler" op="uploadCoverImage" escape=false stageId=$stageId submissionId=$submissionId},
+					baseUrl: {$baseUrl|json_encode}
+				{rdelim},
+				arePermissionsAttached: {if $arePermissionsAttached}true{else}false{/if}
+			{rdelim}
+		);
+	{rdelim});
+</script>
 
- <form class="pkp_form" id="vgWortMetadataForm" method="post" action="{url router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.vgWort.controllers.modal.VGWortCatalogEntryTabHandler" op="saveForm"}">
-{fbvFormArea id="pixelFields"}
-	{fbvFormSection title="plugins.generic.vgWort.submissionMetadataFormPublic" required=false}
-		{fbvElement type="text" id="vgWortPublic" value="" multilingual=false maxlength="255"}
-	{/fbvFormSection}
-	{fbvFormSection title="plugins.generic.vgWort.submissionMetadataFormPrivate" required=false}
-		{fbvElement type="text" id="vgWortPrivate" value="" multilingual=false maxlength="255"}
-	{/fbvFormSection}
-{/fbvFormArea}
+<form class="pkp_form" id="vgWortMetadataForm" method="post" action="{url router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.vgWort.controllers.modal.VGWortCatalogEntryTabHandler" op="saveForm"}">
+	<input type="hidden" name="submissionId" value="{$submissionId|escape}" />
+	<input type="hidden" name="stageId" value="{$stageId|escape}" />
+	<input type="hidden" name="tabPos" value="{$tabPos}" />
+	<input type="hidden" name="tab" value="vgwort" />
+	<input type="hidden" name="displayedInContainer" value="{$formParams.displayedInContainer|escape}" />
+
+	{fbvFormArea id="pixelFields"}
+		{fbvFormSection title="plugins.generic.vgWort.submissionMetadataFormPublic" required=false}
+			{fbvElement type="text" id="vgWortPublic" value=$vgWortPublic multilingual=false maxlength="255"}
+		{/fbvFormSection}
+	{/fbvFormArea}
+
+	{fbvFormButtons id="vgwortMetadataFormSubmit" submitText="common.save"}
 </form>
