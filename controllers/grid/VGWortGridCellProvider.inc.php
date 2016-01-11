@@ -24,7 +24,6 @@ class VGWortGridCellProvider extends GridCellProvider {
 		parent::GridCellProvider();
 	}
 
-
 	//
 	// Template methods from GridCellProvider
 	//
@@ -38,7 +37,7 @@ class VGWortGridCellProvider extends GridCellProvider {
 		$submissionFile = $row->getData();
 
 		switch ($column->getId()) {
-			case 'name':
+/* 			case 'name':
 				$dispatcher = $request->getDispatcher();
 				return array(new LinkAction(
 					'details',
@@ -47,7 +46,7 @@ class VGWortGridCellProvider extends GridCellProvider {
 						'vgWortPublic'
 					),
 					$vgWortPublic->getPath()
-				));
+				)); */
 			default:
 				return parent::getCellActions($request, $row, $column, $position);
 		}
@@ -61,14 +60,13 @@ class VGWortGridCellProvider extends GridCellProvider {
 	 * @return array
 	 */
 	function getTemplateVarsFromRowColumn($row, $column) {
-		$vgWortPublic = $row->getData();
+		$submissionFile = $row->getData();
 
 		switch ($column->getId()) {
-			case 'path':
-				// The action has the label
-				return array('label' => '');
-			case 'title':
-				return array('label' => $vgWortPublic->getLocalizedTitle());
+			case 'name':
+				return array('label' => $submissionFile->getLocalizedName());
+			case 'publicIdentifier':
+				return array('label' => $submissionFile->getData('vgWortPublic'));
 		}
 	}
 }

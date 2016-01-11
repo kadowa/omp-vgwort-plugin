@@ -12,12 +12,17 @@
   -->
  
 <locale name="en_US" full_name="U.S. English">
-	<message key="plugins.generic.vgWort.displayName">VG Wort Plugin</message>
-	<message key="plugins.generic.vgWort.description">Enables adding VGWORT counters to submission files.</message>
+	<message key="plugins.generic.vgWort.displayName">VG Wort Counter Pixels</message>
 	<message key="plugins.generic.vgWort.vgWort">VG Wort</message>
 
 	<message key="plugins.generic.vgWort.submissionMetadataFormPublic">Public identifier</message>
+	<message key="plugins.generic.vgWort.submissionMetadataFormPublicGlobal">Assign a VG Wort counter pixel to the submission (same pixel for all files), if the submission has only one author.</message>
 	<message key="plugins.generic.vgWort.submissionMetadataFormPrivate">Private identifier</message>
 
 	<message key="plugins.generic.vgWort.notification.savedForm">VG Wort pixels saved.</message>
+	
+	<message key="plugins.generic.vgWort.vgWortGrid">Individual identifiers</message>
+	<message key="plugins.generic.vgWort.description">Add individual VG Wort counter pixels to submission files (e.g. if the submission is an edited volume).</message>
+	<message key="plugins.generic.vgWort.submissionFiles">Files</message>
+	<message key="plugins.generic.vgWort.emptyRow">No files</message>
 </locale>

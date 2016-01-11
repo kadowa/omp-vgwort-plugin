@@ -20,4 +20,6 @@
 	<message key="plugins.generic.vgWort.submissionMetadataFormPrivate">Privater Identifizierungscode</message>
 
 	<message key="plugins.generic.vgWort.notification.savedForm">VG-Wort-Zählmarken gespeichert.</message>
+	
+	<message key="plugins.generic.vgWort.submissionFiles">Dateien</message>
 </locale>

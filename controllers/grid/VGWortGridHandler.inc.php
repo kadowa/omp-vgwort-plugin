@@ -21,6 +21,8 @@ class VGWortGridHandler extends GridHandler {
 	/** @var StaticPagesPlugin The static pages plugin */
 	static $plugin;
 
+	var $submissionId;
+	
 	/**
 	 * Set the static pages plugin.
 	 * @param $plugin StaticPagesPlugin
@@ -50,55 +52,41 @@ class VGWortGridHandler extends GridHandler {
 	function initialize($request, $args = null) {
 		parent::initialize($request);
 		$context = $request->getContext();
+		
+		$this->submissionId = $request->getUserVar('submissionId');
+		
+		error_log($this->submissionId);
 
 		// Set the grid details.
-		$this->setTitle('plugins.generic.vgWort.vgWort');
+		$this->setTitle('plugins.generic.vgWort.vgWortGrid');
 		$this->setInstructions('plugins.generic.vgWort.description');
-		$this->setEmptyRowText('plugins.generic.staticPages.noneCreated');
-		
-		$publishedMonographDao = DAORegistry::getDAO('PublishedMonographDAO');
-		$monographDao = DAORegistry::getDAO('MonographDAO');
-		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-		$publishedMonographFactory = $publishedMonographDao->getByPressId($context->getId());
-		$monographFactory = $monographDao->getByPressId($context->getId());
-		
-		while ($monograph = $monographFactory->next()) {
-			$submissionId = $monograph->getId();
-			$files = $submissionFileDao->getBySubmissionId($submissionId);
-			//$this->setGridDataElements($files);
- 			//foreach ($files as $file) {
-				//$file->setData('vgWortPixel', "test123");
-				//$submissionFileDao->updateDataObjectSettings(
-				//		'submission_file_settings',
-				//		$file,
-				//		array('file_id' => $file->getFileId())
-				//);
-			//}
-			break;
-		}
+		$this->setEmptyRowText('plugins.generic.vgWort.emptyRow');
 
-		$this->setGridDataElements($monographFactory);
-		// Add grid-level actions
-		$router = $request->getRouter();
-		import('lib.pkp.classes.linkAction.request.AjaxModal');
-		$this->addAction(
-				new LinkAction(
-						'addStaticPage',
-						new AjaxModal(
-								$router->url($request, null, null, 'addStaticPage'),
-								__('plugins.generic.staticPages.addStaticPage'),
-								'modal_add_item'
-						),
-						__('plugins.generic.staticPages.addStaticPage'),
-						'add_item'
-				)
-		);
+		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
 		
+		$files = $submissionFileDao->getLatestRevisions($this->submissionId, 10);//getBySubmissionId($this->submissionId);
+
+		$this->setGridDataElements($files);
+
 		// Columns
 		$cellProvider = new VGWortGridCellProvider();
 		$this->addColumn(new GridColumn(
-				'title',
-				'plugins.generic.vgWort.pageTitle',
+				'name',
+				'plugins.generic.vgWort.submissionFiles',
+				null,
+				'controllers/grid/gridCell.tpl', // Default null not supported in OMP 1.1
+				$cellProvider
+		));
+		$this->addColumn(new GridColumn(
+				'publicIdentifier',
+				'plugins.generic.vgWort.submissionMetadataFormPublic',
+				null,
+				'controllers/grid/gridCell.tpl', // Default null not supported in OMP 1.1
+				$cellProvider
+		));
+		$this->addColumn(new GridColumn(
+				'privateIdentifier',
+				'plugins.generic.vgWort.submissionMetadataFormPrivate',
 				null,
 				'controllers/grid/gridCell.tpl', // Default null not supported in OMP 1.1
 				$cellProvider
@@ -125,13 +113,57 @@ class VGWortGridHandler extends GridHandler {
 	 * @param $request PKPRequest
 	 */
 	function index($args, $request) {
-		error_log("Hi there!");
 		$context = $request->getContext();
 		import('lib.pkp.classes.form.Form');
+
 		$form = new Form(self::$plugin->getTemplatePath() . 'vgWortMetadata.tpl');
 		$json = new JSONMessage(true, $form->fetch($request));
+
 		return $json->getString();
+	}
+	
+	function editSubmissionFile($args, $request) {
+		$submissionFileId = $request->getUserVar('submissionFileId');
+		
+		error_log($submissionFileId);
+		
+  		$context = $request->getContext();
+		$this->setupTemplate($request);
+		
+		// Create and present the edit form
+
+		import('plugins.generic.vgWort.form.VGWortPixelForm');
+
+		$form = new VGWortPixelForm(self::$plugin, $context->getId(), $submissionFileId);
+	
+		$json = new JSONMessage(true, $form->fetch($request));
+		return $json->getString();
+	}
+	
+	function updateSubmissionFile($args, $request) {
+		$submissionFileId = $request->getUserVar('submissionFileId');
+		$context = $request->getContext();
+		$this->setupTemplate($request);
+		
+		// Create and populate the form
+		import('plugins.generic.vgWort.form.VGWortPixelForm');
+
+		$form = new VGWortPixelForm(self::$plugin, $context->getId(), $submissionFileId);
+		$form->readInputData();
+		
+		// Check the results
+		if ($form->validate()) {
+			// Save the results
+			$form->execute();
+			return DAO::getDataChangedEvent(); //TODO: Display nicely (look at js?)
+		} else {
+			// Present any errors
+			$json = new JSONMessage(true, $form->fetch($request));
+			return $json->getString();
+		}
 	}
 }
 
 ?>
+
+

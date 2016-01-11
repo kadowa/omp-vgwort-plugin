@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @file controllers/grid/StaticPageGridRow.inc.php
+ * @file controllers/grid/VGWortGridRow.inc.php
  *
  * Copyright (c) 2014-2015 Simon Fraser University Library
  * Copyright (c) 2003-2015 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * @class StaticPageGridRow
- * @ingroup controllers_grid_staticPages
+ * @class VGWortGridRow
+ * @ingroup controllers_grid_vgWort
  *
  * @brief Handle custom blocks grid row requests.
  */
@@ -32,17 +32,17 @@ class VGWortGridRow extends GridRow {
 	function initialize($request, $template = null) {
 		parent::initialize($request, $template);
 
-		$staticPageId = $this->getId();
-		if (!empty($staticPageId)) {
+		$submissionFileId = $this->getId();
+		if (!empty($submissionFileId)) {
 			$router = $request->getRouter();
 
-			// Create the "edit static page" action
+			// Create the "edit pixel for an individual submission file" action
 			import('lib.pkp.classes.linkAction.request.AjaxModal');
 			$this->addAction(
 				new LinkAction(
-					'editStaticPage',
+					'editSubmissionFile',
 					new AjaxModal(
-						$router->url($request, null, null, 'editStaticPage', null, array('staticPageId' => $staticPageId)),
+						$router->url($request, null, null, 'editSubmissionFile', null, array('submissionFileId' => $submissionFileId)),
 						__('grid.action.edit'),
 						'modal_edit',
 						true),
