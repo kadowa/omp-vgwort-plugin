@@ -35,12 +35,13 @@
 
 	{fbvFormArea id="pixelFields"}
 		{fbvFormSection title="plugins.generic.vgWort.submissionMetadataFormPublic" required=false}
+			<p class="pkp_help">{translate key="plugins.generic.vgWort.submissionMetadataFormPublicGlobal"}</p>
 			{fbvElement type="text" id="vgWortPublic" value=$vgWortPublic multilingual=false maxlength="255"}
 		{/fbvFormSection}
 	{/fbvFormArea}
 
 	
-	{url|assign:representationsGridUrl router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.vgWort.controllers.grid.VGWortGridHandler" op="fetchGrid" escape=false}
+	{url|assign:representationsGridUrl router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.vgWort.controllers.grid.VGWortGridHandler" op="fetchGrid" submissionId=$submissionId escape=false}
 	{load_url_in_div id="formatsGridContainer"|uniqid url=$representationsGridUrl}
 
 	{fbvFormButtons id="vgwortMetadataFormSubmit" submitText="common.save"}

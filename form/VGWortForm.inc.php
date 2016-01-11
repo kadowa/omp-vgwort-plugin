@@ -35,14 +35,11 @@ class VGWortForm extends Form {
 	 */
 	function VGWortForm($plugin, $contextId, $submissionId, $stageId, $formParams = null) {
 		parent::Form($plugin->getTemplatePath() . 'vgWortMetadata.tpl');
-		
+	
 		$this->contextId = $contextId;
 		$this->submissionId = $submissionId;
 		$this->stageId = $stageId;
 		$this->formParams = $formParams;
-
-		// Add form checks
-		//$this->addCheck(new FormValidatorPost($this));
 	}
 
 	/**
@@ -62,8 +59,6 @@ class VGWortForm extends Form {
 	 * @see Form::fetch
 	 */
 	function fetch($request) {
-		$press = $request->getPress();
-		
 		$templateMgr = TemplateManager::getManager();
 		$templateMgr->assign('submissionId', $this->submissionId);
 		$templateMgr->assign('contextId', $this->contextId);
@@ -78,7 +73,7 @@ class VGWortForm extends Form {
 	function execute() {
 		parent::execute();
 		$public = $this->getData('vgWortPublic');
-		$submissionId = $this->submissionId;//$this->getData('submissionId');
+		$submissionId = $this->submissionId;
 		
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
 		$files = $submissionFileDao->getBySubmissionId($submissionId);
