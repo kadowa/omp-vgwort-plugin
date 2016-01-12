@@ -93,7 +93,7 @@ class VGWortForm extends Form {
 	 * Get the extra form parameters.
 	 */
 	function getFormParams() {
-		return $this->_formParams;
+		return $this->formParams;
 	}
 }
 
