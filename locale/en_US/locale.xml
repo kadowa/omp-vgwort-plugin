@@ -20,6 +20,8 @@
 	<message key="plugins.generic.vgWort.submissionMetadataFormPrivate">Private identifier</message>
 
 	<message key="plugins.generic.vgWort.notification.savedForm">VG Wort pixels saved.</message>
+	<message key="plugins.generic.vgWort.notification.added">Individual VG Wort pixel added.</message>
+	<message key="plugins.generic.vgWort.notification.edited">Individual VG Wort pixel edited.</message>
 	
 	<message key="plugins.generic.vgWort.vgWortGrid">Individual identifiers</message>
 	<message key="plugins.generic.vgWort.description">Add individual VG Wort counter pixels to submission files (e.g. if the submission is an edited volume).</message>

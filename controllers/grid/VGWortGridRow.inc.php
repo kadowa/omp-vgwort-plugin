@@ -16,10 +16,13 @@
 import('lib.pkp.classes.controllers.grid.GridRow');
 
 class VGWortGridRow extends GridRow {
+	var $_submissionId;
+	
 	/**
 	 * Constructor
 	 */
-	function VGWortGridRow() {
+	function VGWortGridRow($submissionId) {
+		$this->_submissionId = $submissionId;
 		parent::GridRow();
 	}
 
@@ -42,7 +45,7 @@ class VGWortGridRow extends GridRow {
 				new LinkAction(
 					'editSubmissionFile',
 					new AjaxModal(
-						$router->url($request, null, null, 'editSubmissionFile', null, array('submissionFileId' => $submissionFileId)),
+						$router->url($request, null, null, 'editSubmissionFile', null, array('submissionFileId' => $submissionFileId, 'submissionId' => $this->_submissionId)),
 						__('grid.action.edit'),
 						'modal_edit',
 						true),
