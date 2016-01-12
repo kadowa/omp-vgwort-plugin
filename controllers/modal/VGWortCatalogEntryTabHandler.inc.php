@@ -87,8 +87,6 @@ class VGWortCatalogEntryTabHandler extends CatalogEntryTabHandler {
 		$json = new JSONMessage();
 		$form = null;
 
-		error_log($this->getCurrentTab());
-
 		$submission = $this->getSubmission();
 		$stageId = $this->getStageId();
 		$notificationKey = null;

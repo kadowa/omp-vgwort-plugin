@@ -63,6 +63,7 @@ class VGWortForm extends Form {
 		$templateMgr->assign('submissionId', $this->submissionId);
 		$templateMgr->assign('contextId', $this->contextId);
 		$templateMgr->assign('stageId', $this->stageId);
+		$templateMgr->assign('formParams', $this->formParams);
 
 		return parent::fetch($request);
 	}

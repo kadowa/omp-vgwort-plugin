@@ -29,7 +29,7 @@
 <form class="pkp_form" id="vgWortMetadataForm" method="post" action="{url router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.vgWort.controllers.modal.VGWortCatalogEntryTabHandler" op="saveForm"}">
 	<input type="hidden" name="submissionId" value="{$submissionId|escape}" />
 	<input type="hidden" name="stageId" value="{$stageId|escape}" />
-	<input type="hidden" name="tabPos" value="{$tabPos}" />
+	<input type="hidden" name="tabPos" value="{$formParams.tabPos}" />
 	<input type="hidden" name="tab" value="vgwort" />
 	<input type="hidden" name="displayedInContainer" value="{$formParams.displayedInContainer|escape}" />
 
