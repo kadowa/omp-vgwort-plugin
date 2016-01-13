@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file plugins/generic/vgWort/controllers/modal/eVGWortCatalogEntryTabHandler.inc.php
+ * @file plugins/generic/vgWort/controllers/modal/VGWortCatalogEntryTabHandler.inc.php
  *
  * Copyright (c) 2014-2015 Simon Fraser University Library
  * Copyright (c) 2003-2015 John Willinsky
@@ -58,7 +58,7 @@ class VGWortCatalogEntryTabHandler extends CatalogEntryTabHandler {
 		$context = $request->getContext();
 
 		$form = new VGWortForm($this::$plugin, $context->getId(), $submission->getId(), $stageId, array('displayedInContainer' => True, 'tabPos' => $this->getTabPosition()));
-		//$form->initData($args, $request);
+		$form->initData($args, $request);
 		return new JSONMessage(true, $form->fetch($request));
 
 	}
@@ -80,7 +80,10 @@ class VGWortCatalogEntryTabHandler extends CatalogEntryTabHandler {
 		$context = $request->getContext();
 
 		import('plugins.generic.vgWort.form.VGWortForm');
-		return new VGWortForm($this::$plugin, $contextId=$context->getId(), $submissionId = $submission->getId(), $stageId, array('displayedInContainer' => True, 'tabPos' => $this->getTabPosition()));
+		$form = new VGWortForm($this::$plugin, $contextId=$context->getId(), $submissionId = $submission->getId(), $stageId, array('displayedInContainer' => True, 'tabPos' => $this->getTabPosition()));
+		$form->initData($args, $request);
+		
+		return $form;
 	}
 
 	function saveForm($args, $request) {

@@ -36,6 +36,7 @@ class VGWortPlugin extends GenericPlugin {
 		if ($success && $this->getEnabled()) {
 			// Register VG Wort tab in catalog
 			HookRegistry::register('Templates::Controllers::Modals::SubmissionMetadata::CatalogEntryTabs::Tabs', array($this, 'showVGWortTab'));
+
 			// Register the components this plugin implements.
 			HookRegistry::register('LoadComponentHandler', array($this, 'setupGridHandler'));
 			
@@ -88,28 +89,13 @@ class VGWortPlugin extends GenericPlugin {
 		return false;
 	}
 	
-	/*
-	 * Insert VG Wort Pixel into the submission_file_settings table
-	 */
-	function addVGWortPixel($submissionFile, $public) {
-		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-		
-		$submissionFile->setData('vgWortPublic', $public);
-		$submissionFileDao->updateDataObjectSettings(
-			'submission_file_settings',
-			$submissionFile,
-			array('file_id' => $submissionFile->getFileId())
-		);
-	}
-	
 	/**
 	 * @copydoc PKPPlugin::getTemplatePath
 	 */
 	function getTemplatePath() {
 		return parent::getTemplatePath() . 'templates/';
+		
 	}
-	
-	// Not in use
 	
 	/**
 	 * Permit requests to the VG Wort grid handler
@@ -132,4 +118,5 @@ class VGWortPlugin extends GenericPlugin {
 		return false;
 	}
 }
+
 ?>

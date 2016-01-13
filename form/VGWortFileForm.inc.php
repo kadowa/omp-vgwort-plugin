@@ -16,29 +16,29 @@
 
 import('lib.pkp.classes.form.Form');
 
-class VGWortPixelForm extends Form {
-	var $contextId;
-	
-	var $submissionId;
+class VGWortFileForm extends Form {
+	var $_submissionId;
 
-	var $submissionFileId;
+	var $_submissionFileId;
 
-	var $formParams;
+	var $_formParams;
 	
 	var $vgWortPublic;
+	
+	var $vgWortPrivate;
 
 	/**
 	 * Constructor
-	 * @param $staticPagesPlugin StaticPagesPlugin The static page plugin
-	 * @param $contextId int Context ID
-	 * @param $staticPageId int Static page ID (if any)
+	 * @param $plugin The VG Wort plugin
+	 * @param $submissionId int Submission ID
+	 * @param $submissionFileId str Submission File ID
 	 */
-	function VGWortPixelForm($plugin, $contextId, $submissionId, $submissionFileId, $formParams = null) {
-		parent::Form($plugin->getTemplatePath() . 'editPixel.tpl');
+	function VGWortFileForm($plugin, $submissionId, $submissionFileId, $formParams = null) {
+		parent::Form($plugin->getTemplatePath() . 'editSubmissionFileCounters.tpl');
 
-		$this->contextId = $contextId;
-		$this->submissionId = $submissionId;
-		$this->submissionFileId = $submissionFileId;
+		$this->_submissionId = $submissionId;
+		$this->_submissionFileId = $submissionFileId;
+		$this->_formParams = $formParams;
 	}
 
 	/**
@@ -49,15 +49,16 @@ class VGWortPixelForm extends Form {
 	}
 	
 	/**
-	 * Initialize form data from the publication date.
+	 * Initialize form data from the database.
 	 */
 	function initData() {
-		if ($this->submissionFileId) {
+		if ($this->_submissionFileId) {
 			$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-			$file = $submissionFileDao->getLatestRevision($this->submissionFileId);
+			$file = $submissionFileDao->getLatestRevision($this->_submissionFileId);
 			
 			$this->_data = array(
 					'vgWortPublic' => $file->getData('vgWortPublic'),
+					'vgWortPrivate' => $file->getData('vgWortPrivate'),
 			);
 		}
 	}
@@ -68,11 +69,11 @@ class VGWortPixelForm extends Form {
 	function fetch($request) {
 		$templateMgr = TemplateManager::getManager();
 		
-		$templateMgr->assign('submissionId', $this->submissionId);
-		$templateMgr->assign('submissionFileId', $this->submissionFileId);
-		$templateMgr->assign('contextId', $this->contextId);
+		$templateMgr->assign('submissionId', $this->_submissionId);
+		$templateMgr->assign('submissionFileId', $this->_submissionFileId);
 		
 		$templateMgr->assign('vgWortPublic', $this->getData('vgWortPublic'));
+		$templateMgr->assign('vgWortPrivate', $this->getData('vgWortPrivate'));
 		
 		return parent::fetch($request);
 	}
@@ -83,12 +84,15 @@ class VGWortPixelForm extends Form {
 	function execute() {
 		parent::execute();
  		$public = $this->getData('vgWortPublic');
-		$submissionFileId = $this->submissionFileId;
+ 		$private = $this->getData('vgWortPrivate');
+ 		$submissionFileId = $this->_submissionFileId;
 
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
 		$file = $submissionFileDao->getLatestRevision($submissionFileId);
 
 		$file->setData('vgWortPublic', $public);
+		$file->setData('vgWortPrivate', $private);
+		
 		$submissionFileDao->updateDataObjectSettings(
 				'submission_file_settings',
 				$file,

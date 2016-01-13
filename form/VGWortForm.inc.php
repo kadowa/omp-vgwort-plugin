@@ -17,15 +17,17 @@
 import('lib.pkp.classes.form.Form');
 
 class VGWortForm extends Form {
-	var $contextId;
+	var $_contextId;
 	
-	var $submissionId;
+	var $_submissionId;
 	
-	var $stageId;
+	var $_stageId;
 	
-	var $formParams;
+	var $_formParams;
 	
 	var $vgWortPublic;
+	
+	var $vgWortPrivate;
 	
 	/**
 	 * Constructor
@@ -34,18 +36,43 @@ class VGWortForm extends Form {
 	 * @param $staticPageId int Static page ID (if any)
 	 */
 	function VGWortForm($plugin, $contextId, $submissionId, $stageId, $formParams = null) {
-		parent::Form($plugin->getTemplatePath() . 'vgWortMetadata.tpl');
+		parent::Form($plugin->getTemplatePath() . 'vgWortCatalogTab.tpl');
 	
-		$this->contextId = $contextId;
-		$this->submissionId = $submissionId;
-		$this->stageId = $stageId;
-		$this->formParams = $formParams;
+		$this->_contextId = $contextId;
+		$this->_submissionId = $submissionId;
+		$this->_stageId = $stageId;
+		$this->_formParams = $formParams;
 	}
 
 	/**
-	 * Initialize form data from current group.
+	 * Initialize form data from the database.
 	 */
 	function initData() {
+		if ($this->_submissionId) {
+			$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+			$files = $submissionFileDao->getLatestRevisions($this->_submissionId, 10);
+
+			$global = True;
+			$public;
+			// check, wether all submission files have the same public code (global assignment)
+			foreach ($files as $file) {
+				if ( isset($public) ) {
+					if ( $public != $file->getData('vgWortPublic') ) {
+						$global = False; // public code differs => individual assignment
+					}
+				}
+				else {
+					$public = $file->getData('vgWortPublic'); //initialize
+				}
+			}
+				
+			if ( $global ) {
+				$this->_data = array(
+					'vgWortPublic' => $file->getData('vgWortPublic'),
+					'vgWortPrivate' => $file->getData('vgWortPrivate'),
+				);
+			}
+		}
 	}
 
 	/**
@@ -60,10 +87,10 @@ class VGWortForm extends Form {
 	 */
 	function fetch($request) {
 		$templateMgr = TemplateManager::getManager();
-		$templateMgr->assign('submissionId', $this->submissionId);
-		$templateMgr->assign('contextId', $this->contextId);
-		$templateMgr->assign('stageId', $this->stageId);
-		$templateMgr->assign('formParams', $this->formParams);
+		$templateMgr->assign('submissionId', $this->_submissionId);
+		$templateMgr->assign('contextId', $this->_contextId);
+		$templateMgr->assign('stageId', $this->_stageId);
+		$templateMgr->assign('formParams', $this->_formParams);
 
 		return parent::fetch($request);
 	}
@@ -74,13 +101,15 @@ class VGWortForm extends Form {
 	function execute() {
 		parent::execute();
 		$public = $this->getData('vgWortPublic');
-		$submissionId = $this->submissionId;
+		$private = $this->getData('vgWortPrivate');
+		$submissionId = $this->_submissionId;
 		
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
 		$files = $submissionFileDao->getBySubmissionId($submissionId);
 		
 		foreach ($files as $file) {
 			$file->setData('vgWortPublic', $public);
+			$file->setData('vgWortPrivate', $private);
 			$submissionFileDao->updateDataObjectSettings(
 					'submission_file_settings',
 					$file,
@@ -93,7 +122,7 @@ class VGWortForm extends Form {
 	 * Get the extra form parameters.
 	 */
 	function getFormParams() {
-		return $this->formParams;
+		return $this->_formParams;
 	}
 }
 

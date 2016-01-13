@@ -1,5 +1,5 @@
 {**
- * templates/vgWortMetadata.tpl
+ * templates/vgWortCatalogTab.tpl
  *
  * Copyright (c) 2014-2015 Simon Fraser University Library
  * Copyright (c) 2003-2015 John Willinsky
@@ -32,17 +32,20 @@
 	<input type="hidden" name="tabPos" value="{$formParams.tabPos}" />
 	<input type="hidden" name="tab" value="vgwort" />
 	<input type="hidden" name="displayedInContainer" value="{$formParams.displayedInContainer|escape}" />
+	
+	<p class="pkp_help">{translate key="plugins.generic.vgWort.submissionMetadataFormHelp"}</p>
 
-	{fbvFormArea id="pixelFields"}
-		{fbvFormSection title="plugins.generic.vgWort.submissionMetadataFormPublic" required=false}
-			<p class="pkp_help">{translate key="plugins.generic.vgWort.submissionMetadataFormPublicGlobal"}</p>
-			{fbvElement type="text" id="vgWortPublic" value=$vgWortPublic multilingual=false maxlength="255"}
+	{fbvFormArea id="pixelFields" title="plugins.generic.vgWort.submissionMetadataFormGlobal"}
+		<p class="pkp_help">{translate key="plugins.generic.vgWort.submissionMetadataFormGlobalHelp"}</p>
+		{fbvFormSection required=false}
+			{fbvElement type="text" id="vgWortPublic" value=$vgWortPublic multilingual=false maxlength="255" label="plugins.generic.vgWort.submissionMetadataFormPublic"}
+			{fbvElement type="text" id="vgWortPrivate" value=$vgWortPrivate multilingual=false maxlength="255" label="plugins.generic.vgWort.submissionMetadataFormPrivate"}
 		{/fbvFormSection}
 	{/fbvFormArea}
 
-	
+	{fbvFormButtons id="vgwortMetadataFormSubmit" submitText="common.save"}
+
 	{url|assign:representationsGridUrl router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.vgWort.controllers.grid.VGWortGridHandler" op="fetchGrid" submissionId=$submissionId escape=false}
 	{load_url_in_div id="formatsGridContainer"|uniqid url=$representationsGridUrl}
 
-	{fbvFormButtons id="vgwortMetadataFormSubmit" submitText="common.save"}
 </form>

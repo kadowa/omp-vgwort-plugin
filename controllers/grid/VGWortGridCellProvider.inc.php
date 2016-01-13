@@ -67,6 +67,8 @@ class VGWortGridCellProvider extends GridCellProvider {
 				return array('label' => $submissionFile->getLocalizedName());
 			case 'publicIdentifier':
 				return array('label' => $submissionFile->getData('vgWortPublic'));
+			case 'privateIdentifier':
+				return array('label' => $submissionFile->getData('vgWortPrivate'));
 		}
 	}
 }

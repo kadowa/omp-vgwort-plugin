@@ -121,7 +121,7 @@ class VGWortGridHandler extends GridHandler {
 	function loadData($request, $filter = null) {
 		$submissionId = $this->getSubmissionId();
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
-		$data = $submissionFileDao->getLatestRevisions($request->getUserVar('submissionId'), 10);//getBySubmissionId($this->submissionId);
+		$data = $submissionFileDao->getLatestRevisions($request->getUserVar('submissionId'), 10);
 		
 		error_log("Get?: " . $request->isGet());
 		error_log("URL: " . $request->getCompleteUrl());
@@ -133,16 +133,14 @@ class VGWortGridHandler extends GridHandler {
 	function editSubmissionFile($args, $request) {
 		$submissionFileId = $request->getUserVar('submissionFileId');
 		
-		error_log("Submission id: " . $this->getSubmissionId());
-		
   		$context = $request->getContext();
 		$this->setupTemplate($request);
 		
 		// Create and present the edit form
 
-		import('plugins.generic.vgWort.form.VGWortPixelForm');
+		import('plugins.generic.vgWort.form.VGWortFileForm');
 
-		$form = new VGWortPixelForm(self::$plugin, $context->getId(), $this->getSubmissionId(), $submissionFileId);
+		$form = new VGWortFileForm(self::$plugin, $this->getSubmissionId(), $submissionFileId);
 		$form->initData();
 		
 		$json = new JSONMessage(true, $form->fetch($request));
@@ -156,14 +154,15 @@ class VGWortGridHandler extends GridHandler {
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
 		$file = $submissionFileDao->getLatestRevision($submissionFileId);		
 		$vgWortPublic = $file->getData('vgWortPublic');
+		$vgWortPrivate = $file->getData('vgWortPrivate');
 
 		$context = $request->getContext();
 		$this->setupTemplate($request);
 		
 		// Create and populate the form
-		import('plugins.generic.vgWort.form.VGWortPixelForm');
+		import('plugins.generic.vgWort.form.VGWortFileForm');
 
-		$form = new VGWortPixelForm(self::$plugin, $context->getId(), $this->getSubmissionId(), $submissionFileId);
+		$form = new VGWortFileForm(self::$plugin, $this->getSubmissionId(), $submissionFileId);
 		$form->initData();
 		$form->readInputData();
 
