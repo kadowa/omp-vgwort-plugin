@@ -20,11 +20,11 @@
  	<input type="hidden" name="submissionId" value="{$submissionId|escape}" />
 	<input type="hidden" name="submissionFileId" value="{$submissionFileId|escape}" />
 
-	{fbvFormArea id="pixelFields" title="plugins.generic.vgWort.submissionMetadataFormGlobal"}
-		<p class="pkp_help">{translate key="plugins.generic.vgWort.submissionMetadataFormGlobalHelp"}</p>
+	{fbvFormArea id="pixelFields" title="plugins.generic.vgWort.submissionMetadataFormIndividual"}
+		<p class="pkp_help">{translate key="plugins.generic.vgWort.submissionMetadataFormIndividualHelp"}</p>
 		{fbvFormSection required=false}
-			{fbvElement type="text" id="vgWortPublic" value=$vgWortPublic multilingual=false maxlength="255" label="plugins.generic.vgWort.submissionMetadataFormPublic"}
-			{fbvElement type="text" id="vgWortPrivate" value=$vgWortPrivate multilingual=false maxlength="255" label="plugins.generic.vgWort.submissionMetadataFormPrivate"}
+			{fbvElement type="text" id="vgWortPublic" inline="true" size=$fbvStyles.size.MEDIUM value=$vgWortPublic multilingual=false maxlength="255" label="plugins.generic.vgWort.submissionMetadataFormPublic"}
+			{fbvElement type="text" id="vgWortPrivate" inline="true" size=$fbvStyles.size.MEDIUM value=$vgWortPrivate multilingual=false maxlength="255" label="plugins.generic.vgWort.submissionMetadataFormPrivate"}
 		{/fbvFormSection}
 	{/fbvFormArea}
 

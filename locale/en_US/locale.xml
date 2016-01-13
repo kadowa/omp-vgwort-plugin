@@ -15,24 +15,26 @@
 	<message key="plugins.generic.vgWort.displayName">VG Wort Counter Pixels</message>
 	<message key="plugins.generic.vgWort.vgWort">VG Wort</message>
 	
-	<message key="plugins.generic.vgWort.submissionMetadataFormHelp">You can assign VG Wort counter pixels to published files. For monographs, you can assign an identifier to the whole submission, for edited volumes, you can assign individual counters to different submission files.</message>
+	<message key="plugins.generic.vgWort.submissionMetadataFormHelp">You can assign VG Wort pixel codes to all submission proof files. For monographs, you can assign a pair of codes to the whole submission, for edited volumes, you can assign individual codes to every submission file.</message>
 
-	<message key="plugins.generic.vgWort.submissionMetadataFormGlobal">Submission identifier</message>
-	<message key="plugins.generic.vgWort.submissionMetadataFormGlobalHelp">Assign a VG Wort counter to the submission as a whole, if the submission is a monograph. The same pixel is assigned to all submission files.</message>
-	<message key="plugins.generic.vgWort.submissionMetadataFormPublic">Public identifier</message>
+	<message key="plugins.generic.vgWort.submissionMetadataFormGlobal">Submission pixel codes</message>
+	<message key="plugins.generic.vgWort.submissionMetadataFormGlobalHelp">Assign a VG Wort pixel code to the submission as a whole, if the submission is a monograph (this pixel code is then assigned to all submission files).</message>
+	<message key="plugins.generic.vgWort.submissionMetadataFormPublic">Public code</message>
 	<message key="plugins.generic.vgWort.submissionMetadataFormPublicGlobalHelp">TODO</message>
-	<message key="plugins.generic.vgWort.submissionMetadataFormPrivate">Private identifier</message>
+	<message key="plugins.generic.vgWort.submissionMetadataFormPrivate">Private code (for author)</message>
 	<message key="plugins.generic.vgWort.submissionMetadataFormPrivateGlobalHelp">TODO</message>
 
-	<message key="plugins.generic.vgWort.submissionMetadataFormIndividual">Submission file identifier</message>
-	<message key="plugins.generic.vgWort.submissionMetadataFormIndividualHelp">Assign a VG Wort counter to the submission as a whole, if the submission is a monograph. The same pixel is assigned to all submission files.</message>
+	<message key="plugins.generic.vgWort.submissionMetadataFormIndividual">Individual submission file pixel codes (for edited volumes)</message>
+	<message key="plugins.generic.vgWort.submissionMetadataFormIndividualHelp">Assign individual pixel codes to separate submission files, e.g. for edited volumes.</message>
 
-	<message key="plugins.generic.vgWort.notification.savedForm">VG Wort pixels saved.</message>
-	<message key="plugins.generic.vgWort.notification.added">Individual VG Wort pixel added.</message>
-	<message key="plugins.generic.vgWort.notification.edited">Individual VG Wort pixel edited.</message>
+	<message key="plugins.generic.vgWort.notification.savedForm">VG Wort codes saved.</message>
+	<message key="plugins.generic.vgWort.notification.added">VG Wort code added.</message>
+	<message key="plugins.generic.vgWort.notification.edited">VG Wort code edited.</message>
 	
-	<message key="plugins.generic.vgWort.vgWortGrid">Individual submission file identifiers</message>
-	<message key="plugins.generic.vgWort.description">Add individual VG Wort counter pixels to submission files, if the submission is an edited volume with chapters by separate authors.</message>
+	<message key="plugins.generic.vgWort.vgWortGrid">Individual submission file pixel codes (for edited volumes)</message>
+	<message key="plugins.generic.vgWort.description">Assign individual pixel codes to separate submission files, e.g. if the submission is an edited volume with chapters by separate authors.</message>
 	<message key="plugins.generic.vgWort.submissionFiles">Files</message>
 	<message key="plugins.generic.vgWort.emptyRow">No files</message>
+	
+	<message key="plugins.generic.vgWort.save">Assign to all submission files</message>
 </locale>
