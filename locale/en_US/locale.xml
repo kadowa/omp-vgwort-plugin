@@ -15,7 +15,7 @@
 	<message key="plugins.generic.vgWort.displayName">VG Wort Counter Pixels</message>
 	<message key="plugins.generic.vgWort.vgWort">VG Wort</message>
 	
-	<message key="plugins.generic.vgWort.submissionMetadataFormHelp">You can assign VG Wort counter pixels to published files. For monographs, you can assing an identifier to the whole submission, for edited volumes, you can assign individual counters to different submission files.</message>
+	<message key="plugins.generic.vgWort.submissionMetadataFormHelp">You can assign VG Wort counter pixels to published files. For monographs, you can assign an identifier to the whole submission, for edited volumes, you can assign individual counters to different submission files.</message>
 
 	<message key="plugins.generic.vgWort.submissionMetadataFormGlobal">Submission identifier</message>
 	<message key="plugins.generic.vgWort.submissionMetadataFormGlobalHelp">Assign a VG Wort counter to the submission as a whole, if the submission is a monograph. The same pixel is assigned to all submission files.</message>
