@@ -12,7 +12,9 @@
   -->
  
 <locale name="en_US" full_name="U.S. English">
-	<message key="plugins.generic.vgWort.displayName">VG Wort Counter Pixels</message>
+	<message key="plugins.generic.vgWort.displayName">VG Wort Plugin</message>
+	<message key="plugins.generic.vgWort.description">Assign individual pixel codes to separate submission files, e.g. if the submission is an edited volume with chapters by separate authors.</message>
+
 	<message key="plugins.generic.vgWort.vgWort">VG Wort</message>
 	
 	<message key="plugins.generic.vgWort.submissionMetadataFormHelp">You can assign VG Wort pixel codes to all submission proof files. For monographs, you can assign a pair of codes to the whole submission, for edited volumes, you can assign individual codes to every submission file.</message>
@@ -35,9 +37,14 @@
 	<message key="plugins.generic.vgWort.notification.edited">VG Wort code edited.</message>
 	
 	<message key="plugins.generic.vgWort.vgWortGrid">Individual submission file pixel codes (for edited volumes)</message>
-	<message key="plugins.generic.vgWort.description">Assign individual pixel codes to separate submission files, e.g. if the submission is an edited volume with chapters by separate authors.</message>
 	<message key="plugins.generic.vgWort.submissionFiles">Files</message>
 	<message key="plugins.generic.vgWort.emptyRow">No files</message>
 	
 	<message key="plugins.generic.vgWort.save">Assign to all submission files</message>
+	
+	<message key="plugins.generic.vgwort.manager.settings.description">Configure VG Wort server domains.</message>
+	<message key="plugins.generic.vgwort.manager.settings.domain">VG Wort domain</message>
+	<message key="plugins.generic.vgwort.manager.settings.domain.help"></message>
+	<message key="plugins.generic.vgwort.manager.settings.domain.addinfo">Server URL</message>
+	<message key="plugins.generic.vgwort.manager.settings.domain.alternative.addinfo">Alternativ server URL</message>
 </locale>

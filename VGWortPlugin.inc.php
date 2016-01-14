@@ -16,7 +16,6 @@
 import('lib.pkp.classes.plugins.GenericPlugin');
 
 class VGWortPlugin extends GenericPlugin {
-
 	function getDisplayName() {
 		return __('plugins.generic.vgWort.displayName');
 	}
@@ -24,7 +23,6 @@ class VGWortPlugin extends GenericPlugin {
 	function getDescription() {
 		return __('plugins.generic.vgWort.description');
 	}
-
 	/**
 	 * Called as a plugin is registered to the registry
 	 * @param $category String Name of category plugin was registered to
@@ -36,10 +34,10 @@ class VGWortPlugin extends GenericPlugin {
 		if ($success && $this->getEnabled()) {
 			// Register VG Wort tab in catalog
 			HookRegistry::register('Templates::Controllers::Modals::SubmissionMetadata::CatalogEntryTabs::Tabs', array($this, 'showVGWortTab'));
-
+	
 			// Register the components this plugin implements.
 			HookRegistry::register('LoadComponentHandler', array($this, 'setupGridHandler'));
-			
+				
 			// register addition of VG Wort pixels to submission file settings table
 			HookRegistry::register('submissionfiledao::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
 			HookRegistry::register('monographfiledao::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
@@ -49,6 +47,68 @@ class VGWortPlugin extends GenericPlugin {
 		return $success;
 	}
 	
+	/**
+	 * @see PKPPlugin::getManagementVerbs()
+	 */
+	function getManagementVerbs() {
+		return array(array('settings', __('manager.plugins.settings')));
+	}
+	
+	function getActions($request, $actionArgs) {
+		$router = $request->getRouter();
+		import('lib.pkp.classes.linkAction.request.AjaxModal');
+		return array_merge(
+				$this->getEnabled()?array(
+						new LinkAction(
+								'settings',
+								new AjaxModal(
+										$router->url($request, null, null, 'manage', null, $actionArgs),
+										$this->getDisplayName()
+								),
+								__('manager.plugins.settings'),
+								null
+						),
+				):array(),
+				parent::getActions($request, $actionArgs)
+		);
+	}
+	
+	/**
+	 * @copydoc PKPPlugin::manage()
+	 */
+	function manage($args, $request) {
+		$notificationManager = new NotificationManager();
+		$user = $request->getUser();
+		$press = $request->getPress();
+	
+		$settingsFormName = $this->getSettingsFormName();
+		$settingsFormNameParts = explode('.', $settingsFormName);
+		$settingsFormClassName = array_pop($settingsFormNameParts);
+		$this->import($settingsFormName);
+		$form = new $settingsFormClassName($this, $press->getId());
+		
+		if ($request->getUserVar('save')) {
+			$form->readInputData();
+			if ($form->validate()) {
+				$form->execute();
+				$notificationManager->createTrivialNotification($user->getId(), NOTIFICATION_TYPE_SUCCESS);
+				return new JSONMessage(true);
+			} else {
+				return new JSONMessage(true, $form->fetch($request));
+			}
+		} else {
+			$form->initData();
+			return new JSONMessage(true, $form->fetch($request));
+		}
+	}
+
+	
+	/**
+	 * @see PubIdPlugin::getSettingsFormName()
+	 */
+	function getSettingsFormName() {
+		return 'form.VGWortSettingsForm';
+	}
 
 	/**
 	 * Extend the website settings tabs to include VG Wort
@@ -57,6 +117,10 @@ class VGWortPlugin extends GenericPlugin {
 	 * @return boolean Hook handling status
 	 */
 	function showVGWortTab($hookName, $args) {
+		if ( !$this->getEnabled() ) {
+			return;
+		}
+		
 		$smarty =& $args[1];
 		$output =& $args[2];
 		$request =& Registry::get('request');
