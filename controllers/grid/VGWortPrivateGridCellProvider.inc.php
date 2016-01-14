@@ -15,38 +15,38 @@
 
 import('lib.pkp.classes.controllers.grid.GridCellProvider');
 import('lib.pkp.classes.linkAction.request.RedirectAction');
+import('lib.pkp.classes.controllers.grid.DataObjectGridCellProvider');
 
-class VGWortGridCellProvider extends GridCellProvider {
+class VGWortPrivateGridCellProvider extends DataObjectGridCellProvider {
+	var $_submissionId;
+	
 	/**
 	 * Constructor
 	 */
-	function VGWortGridCellProvider() {
-		parent::GridCellProvider();
+	function VGWortPrivateGridCellProvider($submissionId) {
+		$this->_submissionId = $submissionId;
+		parent::DataObjectGridCellProvider();
 	}
-
-	//
-	// Template methods from GridCellProvider
-	//
-	/**
-	 * Get cell actions associated with this row/column combination
-	 * @param $row GridRow
-	 * @param $column GridColumn
-	 * @return array an array of LinkAction instances
-	 */
-	function getCellActions($request, $row, $column, $position = GRID_ACTION_POSITION_DEFAULT) {
+	
+	function getCellActions($request, $row, $column, $position = GRID_ACTION_POSITION_ROW_CLICK) {
 		$submissionFile = $row->getData();
-
+		$router = $request->getRouter();
+	
 		switch ($column->getId()) {
-/* 			case 'name':
+			case 'name':
 				$dispatcher = $request->getDispatcher();
-				return array(new LinkAction(
-					'details',
-					new RedirectAction(
-						$dispatcher->url($request, ROUTE_PAGE, null) . '/' . $vgWortPublic->getPath(),
-						'vgWortPublic'
+				return array(
+					new LinkAction(
+						'editSubmissionFile',
+						new AjaxModal(
+								$router->url($request, null, null, 'editSubmissionFile', null, array('submissionFileId' => $submissionFile->getFileId(), 'submissionId' => $this->_submissionId)),
+								__('grid.action.edit'),
+								'modal_edit',
+								true),
+						__('plugins.generic.vgWort.grid.action.edit'),
+						'edit'
 					),
-					$vgWortPublic->getPath()
-				)); */
+				);
 			default:
 				return parent::getCellActions($request, $row, $column, $position);
 		}
@@ -64,10 +64,8 @@ class VGWortGridCellProvider extends GridCellProvider {
 
 		switch ($column->getId()) {
 			case 'name':
-				return array('label' => $submissionFile->getLocalizedName());
-			case 'publicIdentifier':
-				return array('label' => $submissionFile->getData('vgWortPublic'));
-			case 'privateIdentifier':
+				return array('label' => '');
+			case 'code':
 				return array('label' => $submissionFile->getData('vgWortPrivate'));
 		}
 	}

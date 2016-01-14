@@ -13,11 +13,12 @@
  * @brief Handle VG Wort grid requests.
  */
 
-import('lib.pkp.classes.controllers.grid.GridHandler');
+import('lib.pkp.classes.controllers.grid.CategoryGridHandler');
 import('plugins.generic.vgWort.controllers.grid.VGWortGridRow');
-import('plugins.generic.vgWort.controllers.grid.VGWortGridCellProvider');
+import('plugins.generic.vgWort.controllers.grid.VGWortPublicGridCellProvider');
+import('plugins.generic.vgWort.controllers.grid.VGWortPrivateGridCellProvider');
 
-class VGWortGridHandler extends GridHandler {
+class VGWortGridHandler extends CategoryGridHandler {
 	/** @var StaticPagesPlugin The static pages plugin */
 	static $plugin;
 
@@ -73,7 +74,7 @@ class VGWortGridHandler extends GridHandler {
 		$this->setGridDataElements($files);
 		
 		// Columns
-		$cellProvider = new VGWortGridCellProvider();
+		$cellProvider = new VGWortPrivateGridCellProvider($this->getSubmissionId());
 		$this->addColumn(new GridColumn(
 				'name',
 				'plugins.generic.vgWort.submissionFiles',
@@ -82,19 +83,16 @@ class VGWortGridHandler extends GridHandler {
 				$cellProvider
 		));
 		$this->addColumn(new GridColumn(
-				'publicIdentifier',
-				'plugins.generic.vgWort.submissionMetadataFormPublic',
+				'code',
+				'plugins.generic.vgWort.submissionMetadataForm.code',
 				null,
 				'controllers/grid/gridCell.tpl', // Default null not supported in OMP 1.1
 				$cellProvider
 		));
-		$this->addColumn(new GridColumn(
-				'privateIdentifier',
-				'plugins.generic.vgWort.submissionMetadataFormPrivate',
-				null,
-				'controllers/grid/gridCell.tpl', // Default null not supported in OMP 1.1
-				$cellProvider
-		));	
+	}
+	
+	function getCategoryRowIdParameterName() {
+		return 'submissionId';
 	}
 	
 	//
@@ -113,6 +111,20 @@ class VGWortGridHandler extends GridHandler {
 		return array(
 				'submissionId' => $submissionId = $this->getSubmissionId(),
 		);
+	}
+	
+	function getCategoryRowInstance() {
+		$row = new VGWortGridRow($this->getSubmissionId());
+
+		$row->setCellProvider(new VGWortPublicGridCellProvider($this->getSubmissionId()));
+		return $row;
+	}
+	
+	/**
+	 * @see CategoryGridHandler::loadCategoryData()
+	 */
+	function loadCategoryData($request, &$submissionFile, $filter) {
+		return array(0 => $submissionFile);
 	}
 
 	/**

@@ -23,6 +23,9 @@
 	<message key="plugins.generic.vgWort.submissionMetadataFormPublicGlobalHelp">TODO</message>
 	<message key="plugins.generic.vgWort.submissionMetadataFormPrivate">Private code (for author)</message>
 	<message key="plugins.generic.vgWort.submissionMetadataFormPrivateGlobalHelp">TODO</message>
+	<message key="plugins.generic.vgWort.submissionMetadataForm.code">Code pairs</message>
+	
+	<message key="plugins.generic.vgWort.grid.action.edit">Edit code pair</message>
 
 	<message key="plugins.generic.vgWort.submissionMetadataFormIndividual">Individual submission file pixel codes (for edited volumes)</message>
 	<message key="plugins.generic.vgWort.submissionMetadataFormIndividualHelp">Assign individual pixel codes to separate submission files, e.g. for edited volumes.</message>

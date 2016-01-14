@@ -44,7 +44,7 @@
 	{/fbvFormArea}
 
 	{fbvFormButtons id="vgwortMetadataFormSubmit" submitText="plugins.generic.vgWort.save"}
-
-	{url|assign:representationsGridUrl router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.vgWort.controllers.grid.VGWortGridHandler" op="fetchGrid" submissionId=$submissionId escape=false}
-	{load_url_in_div id="formatsGridContainer"|uniqid url=$representationsGridUrl}
 </form>
+
+{url|assign:representationsGridUrl router=$smarty.const.ROUTE_COMPONENT component="plugins.generic.vgWort.controllers.grid.VGWortGridHandler" op="fetchGrid" submissionId=$submissionId escape=false}
+{load_url_in_div id="formatsGridContainer"|uniqid url=$representationsGridUrl}

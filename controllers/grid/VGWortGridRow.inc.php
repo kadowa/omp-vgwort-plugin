@@ -13,10 +13,11 @@
  * @brief Handle custom blocks grid row requests.
  */
 
-import('lib.pkp.classes.controllers.grid.GridRow');
+import('lib.pkp.classes.controllers.grid.GridCategoryRow');
+import('lib.pkp.classes.linkAction.request.AjaxModal');
+import('lib.pkp.classes.linkAction.request.RemoteActionConfirmationModal');
 
-class VGWortGridRow extends GridRow {
-	
+class VGWortGridRow extends GridCategoryRow {
 	var $_submissionId;
 	
 	/**
@@ -26,6 +27,7 @@ class VGWortGridRow extends GridRow {
 		$this->_submissionId = $submissionId;
 		parent::GridRow();
 	}
+	
 
 	//
 	// Overridden template methods
@@ -36,13 +38,11 @@ class VGWortGridRow extends GridRow {
 	function initialize($request, $template = null) {
 		parent::initialize($request, $template);
 
-		$submissionFileId = $this->getId();
+/*		$submissionFileId = $this->getId();
 		if (!empty($submissionFileId)) {
 			$router = $request->getRouter();
 
-			// Create the "edit pixel for an individual submission file" action
-			import('lib.pkp.classes.linkAction.request.AjaxModal');
-			$this->addAction(
+ 			$this->addAction(
 				new LinkAction(
 					'editSubmissionFile',
 					new AjaxModal(
@@ -54,7 +54,7 @@ class VGWortGridRow extends GridRow {
 					'edit'
 				)
 			);
-		}
+		} */
 	}
 }
 
