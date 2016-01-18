@@ -8,7 +8,7 @@
 
 ## Configuration
 
-After installation, enable the plugin in `Management > Settings > Website > Plugins > Public Identifier Plugins > VG Wort > Settings` and specifiy a VG Wort server. Assign VG Wort code pairs in the VG Wort catalog tab.
+After installation, enable the plugin in `Management > Settings > Website > Plugins > Generic Plugins > VG Wort > Settings` and specifiy a VG Wort server. Assign VG Wort code pairs in the VG Wort catalog tab.
 
 ## Bugs / Issues
 
