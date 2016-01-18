@@ -38,11 +38,14 @@ class VGWortPlugin extends GenericPlugin {
 			// Register the components this plugin implements.
 			HookRegistry::register('LoadComponentHandler', array($this, 'setupGridHandler'));
 				
-			// register addition of VG Wort pixels to submission file settings table
+			// Register addition of VG Wort pixels to submission file settings table
 			HookRegistry::register('submissionfiledao::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
 			HookRegistry::register('monographfiledao::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
 			HookRegistry::register('submissionfiledaodelegate::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
 			HookRegistry::register('monographfiledaodelegate::getAdditionalFieldNames', array($this, 'addVGWortPixelMetadataField'));
+			
+			// Hook for adding pixel tags to templates
+			HookRegistry::register ('TemplateManager::display', array($this, 'handleTemplateDisplay'));
 		}
 		return $success;
 	}
@@ -153,12 +156,72 @@ class VGWortPlugin extends GenericPlugin {
 		return false;
 	}
 	
+	/*
+	 * Look for book template
+	 */
+	function handleTemplateDisplay($hookName, $args) {
+		$templateManager =& $args[0];
+		$template =& $args[1];
+	
+		switch ( $template ) {
+			case 'frontend/pages/book.tpl':
+				$templateManager->register_outputfilter(array($this, 'addPixelToLink'));
+		}
+	}
+	
+	/*
+	 * Add pixel to PDF download/view links
+	 */
+	function addPixelToLink($output, &$smarty) {
+		$smarty->unregister_outputfilter('addPixelToLink');
+	
+		$output = preg_replace_callback (
+				'|http:\/\/.*catalog\/view(\/[0-9-]+)+|',
+				array($this, "addCounterToURL"),
+				$output
+				);
+			
+		$output = preg_replace_callback (
+				'|http:\/\/.*catalog\/download(\/[0-9-]+)+|',
+				array($this, "addCounterToURL"),
+				$output
+				);
+
+		return $output;
+	}
+	
+	function addCounterToURL($match) {
+		$matches = [];
+		preg_match('|[0-9]+-[0-9]+|', $match[0], $matches);
+		$submissionFileId = $matches[0];
+		
+		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
+		$file = $submissionFileDao->getLatestRevision($submissionFileId);
+		
+		$publicCode = $file->getData('vgWortPublic');
+		
+		if ( $publicCode ) {
+					return "http://" . $this->getDomain() . "/na/" . $publicCode . "?l=" . $match[0];	
+		}
+		return $match[0];
+	}
+	
 	/**
 	 * @copydoc PKPPlugin::getTemplatePath
 	 */
 	function getTemplatePath() {
 		return parent::getTemplatePath() . 'templates/';
 		
+	}
+	
+	function getDomain() {
+		$domain = $this->getSetting(null, "domain");
+		
+		if ( !$domain ) {
+			$domain = "vg01.met.vgwort.de"; //default
+		}
+		
+		return $domain;
 	}
 	
 	/**
