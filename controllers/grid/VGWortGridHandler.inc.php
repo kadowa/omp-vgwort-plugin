@@ -65,7 +65,6 @@ class VGWortGridHandler extends CategoryGridHandler {
 		$this->setSubmissionId($request->getUserVar('submissionId'));
 		// Set the grid details.
 		$this->setTitle('plugins.generic.vgWort.vgWortGrid');
-		$this->setInstructions('plugins.generic.vgWort.description');
 		$this->setEmptyRowText('plugins.generic.vgWort.emptyRow');
 
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');

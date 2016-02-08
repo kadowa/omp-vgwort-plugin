@@ -13,8 +13,6 @@
  
 <locale name="en_US" full_name="U.S. English">
 	<message key="plugins.generic.vgWort.displayName">VG Wort Plugin</message>
-	<message key="plugins.generic.vgWort.description">Assign individual pixel codes to separate submission files, e.g. if the submission is an edited volume with chapters by separate authors.</message>
-
 	<message key="plugins.generic.vgWort.vgWort">VG Wort</message>
 	
 	<message key="plugins.generic.vgWort.submissionMetadataFormHelp">You can assign VG Wort pixel codes to all submission proof files. For monographs, you can assign a pair of codes to the whole submission, for edited volumes, you can assign individual codes to every submission file.</message>
